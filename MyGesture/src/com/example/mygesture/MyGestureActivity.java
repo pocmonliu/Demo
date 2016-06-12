@@ -15,44 +15,79 @@ public class MyGestureActivity extends Activity{
 
     private final static String TAG = "MyGestureActivity: ";
     
-    private RelativeLayout left;
-    private TextView tvLeftOperation;
-    private RelativeLayout right;
-    private TextView tvRightOperation;
+    private RelativeLayout leftfornt;
+    private TextView tvLeftFrontOperation;
+    private RelativeLayout rightfront;
+    private TextView tvRightFrontOperation;
+    private RelativeLayout leftrear;
+    private TextView tvLeftRearOperation;
+    private RelativeLayout rightrear;
+    private TextView tvRightRearOperation;
     
-    private GestureDetector mLeftGestureDetector;
-    private GestureDetector mRightGestureDetector;
+    private GestureDetector mLeftFrontGestureDetector;
+    private GestureDetector mRightFrontGestureDetector;
+    private GestureDetector mLeftRearGestureDetector;
+    private GestureDetector mRightRearGestureDetector;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_gesture);
         
-        mLeftGestureDetector = new GestureDetector(this, new LeftOnGestureListener());
-        mRightGestureDetector = new GestureDetector(this, new RightOnGestureListener());
+        mLeftFrontGestureDetector = new GestureDetector(this, new LeftFrontOnGestureListener());
+        mRightFrontGestureDetector = new GestureDetector(this, new RightFrontOnGestureListener());
+        mLeftRearGestureDetector = new GestureDetector(this, new LeftRearOnGestureListener());
+        mRightRearGestureDetector = new GestureDetector(this, new RightRearOnGestureListener());
         
-        left = (RelativeLayout)findViewById(R.id.left);
-        tvLeftOperation = (TextView) findViewById(R.id.tv_left_operation);
-        right = (RelativeLayout)findViewById(R.id.right);
-        tvRightOperation = (TextView) findViewById(R.id.tv_right_operation);
+        leftfornt = (RelativeLayout)findViewById(R.id.front_left);
+        tvLeftFrontOperation = (TextView) findViewById(R.id.tv_front_left_operation);
+        rightfront = (RelativeLayout)findViewById(R.id.front_right);
+        tvRightFrontOperation = (TextView) findViewById(R.id.tv_front_right_operation);
+        leftrear = (RelativeLayout)findViewById(R.id.rear_left);
+        tvLeftRearOperation = (TextView) findViewById(R.id.tv_rear_left_operation);
+        rightrear = (RelativeLayout)findViewById(R.id.rear_right);
+        tvRightRearOperation = (TextView) findViewById(R.id.tv_rear_right_operation);
         
-        left.setOnTouchListener(new OnTouchListener() {
+        
+        leftfornt.setOnTouchListener(new OnTouchListener() {
             
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d(getClass().getName(), "onTouch-----" + getActionName(event.getAction()));
-                mLeftGestureDetector.onTouchEvent(event);
+                mLeftFrontGestureDetector.onTouchEvent(event);
                 // 一定要返回true，不然获取不到完整的事件
                 return true;
             }
         });
         
-        right.setOnTouchListener(new OnTouchListener() {
+        rightfront.setOnTouchListener(new OnTouchListener() {
             
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d(getClass().getName(), "onTouch-----" + getActionName(event.getAction()));
-                mRightGestureDetector.onTouchEvent(event);
+                mRightFrontGestureDetector.onTouchEvent(event);
+                // 一定要返回true，不然获取不到完整的事件
+                return true;
+            }
+        });
+        
+        leftrear.setOnTouchListener(new OnTouchListener() {
+            
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d(getClass().getName(), "onTouch-----" + getActionName(event.getAction()));
+                mLeftRearGestureDetector.onTouchEvent(event);
+                // 一定要返回true，不然获取不到完整的事件
+                return true;
+            }
+        });
+        
+        rightrear.setOnTouchListener(new OnTouchListener() {
+            
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d(getClass().getName(), "onTouch-----" + getActionName(event.getAction()));
+                mRightRearGestureDetector.onTouchEvent(event);
                 // 一定要返回true，不然获取不到完整的事件
                 return true;
             }
@@ -81,7 +116,7 @@ public class MyGestureActivity extends Activity{
     }
 
 
-    class LeftOnGestureListener extends SimpleOnGestureListener{
+    class LeftFrontOnGestureListener extends SimpleOnGestureListener{
 //        @Override
 //        public boolean onDown(MotionEvent e) {
 //            Log.d(TAG, "onDown-----" + getActionName(e.getAction()));
@@ -97,7 +132,7 @@ public class MyGestureActivity extends Activity{
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Log.d(TAG, "onSingleTapConfirmed-----" + getActionName(e.getAction()));
-            tvLeftOperation.setText("单击");
+            tvLeftFrontOperation.setText("单击");
             return false;
         }
         
@@ -111,7 +146,7 @@ public class MyGestureActivity extends Activity{
         public boolean onDoubleTapEvent(MotionEvent e) {
             Log.d(TAG, "onDoubleTapEvent-----" + getActionName(e.getAction()));
             if(e.getAction() == MotionEvent.ACTION_UP){
-                tvLeftOperation.setText("双击");
+                tvLeftFrontOperation.setText("双击");
             }
             return false;
         }
@@ -119,7 +154,7 @@ public class MyGestureActivity extends Activity{
         @Override
         public void onLongPress(MotionEvent e) {
             Log.d(TAG, "onLongPress-----" + getActionName(e.getAction()));
-            tvLeftOperation.setText("长按");
+            tvLeftFrontOperation.setText("长按");
         }       
         
 //        @Override
@@ -151,12 +186,12 @@ public class MyGestureActivity extends Activity{
 //        }
     }
     
-    class RightOnGestureListener extends SimpleOnGestureListener{
+    class RightFrontOnGestureListener extends SimpleOnGestureListener{
       
       @Override
       public boolean onSingleTapConfirmed(MotionEvent e) {
           Log.d(TAG, "onSingleTapConfirmed-----" + getActionName(e.getAction()));
-          tvRightOperation.setText("单击");
+          tvRightFrontOperation.setText("单击");
           return false;
       }
       
@@ -164,7 +199,7 @@ public class MyGestureActivity extends Activity{
       public boolean onDoubleTapEvent(MotionEvent e) {
           Log.d(TAG, "onDoubleTapEvent-----" + getActionName(e.getAction()));
           if(e.getAction() == MotionEvent.ACTION_UP){
-              tvRightOperation.setText("双击");
+              tvRightFrontOperation.setText("双击");
           }
           return false;
       }
@@ -172,8 +207,57 @@ public class MyGestureActivity extends Activity{
       @Override
       public void onLongPress(MotionEvent e) {
           Log.d(TAG, "onLongPress-----" + getActionName(e.getAction()));
-          tvRightOperation.setText("长按");
+          tvRightFrontOperation.setText("长按");
       }       
   }
     
+    class LeftRearOnGestureListener extends SimpleOnGestureListener{
+        
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.d(TAG, "onSingleTapConfirmed-----" + getActionName(e.getAction()));
+            tvLeftRearOperation.setText("单击");
+            return false;
+        }
+        
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            Log.d(TAG, "onDoubleTapEvent-----" + getActionName(e.getAction()));
+            if(e.getAction() == MotionEvent.ACTION_UP){
+                tvLeftRearOperation.setText("双击");
+            }
+            return false;
+        }
+        
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Log.d(TAG, "onLongPress-----" + getActionName(e.getAction()));
+            tvLeftRearOperation.setText("长按");
+        }       
+    }
+    
+    class RightRearOnGestureListener extends SimpleOnGestureListener{
+        
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.d(TAG, "onSingleTapConfirmed-----" + getActionName(e.getAction()));
+            tvRightRearOperation.setText("单击");
+            return false;
+        }
+        
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            Log.d(TAG, "onDoubleTapEvent-----" + getActionName(e.getAction()));
+            if(e.getAction() == MotionEvent.ACTION_UP){
+                tvRightRearOperation.setText("双击");
+            }
+            return false;
+        }
+        
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Log.d(TAG, "onLongPress-----" + getActionName(e.getAction()));
+            tvRightRearOperation.setText("长按");
+        }       
+    }
 }
