@@ -1,9 +1,5 @@
 package com.example.mygesture;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,7 +14,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -31,20 +26,6 @@ public class MyGestureActivity extends Activity{
     private RelativeLayout layoutFourTires;
     private ImageView ivCar;
     
-//    private RelativeLayout leftfornt;
-//    private TextView tvLeftFrontOperation;
-//    private RelativeLayout rightfront;
-//    private TextView tvRightFrontOperation;
-//    private RelativeLayout leftrear;
-//    private TextView tvLeftRearOperation;
-//    private RelativeLayout rightrear;
-//    private TextView tvRightRearOperation;
-    
-    private GestureDetector mLeftFrontGestureDetector;
-    private GestureDetector mRightFrontGestureDetector;
-    private GestureDetector mLeftRearGestureDetector;
-    private GestureDetector mRightRearGestureDetector;
-    
     int mScreenWidth;
     int mScreenHeight;
     
@@ -52,6 +33,11 @@ public class MyGestureActivity extends Activity{
     private TireLayout rightfront;
     private TireLayout leftrear;
     private TireLayout rightrear;
+    
+    private GestureDetector mLeftFrontGestureDetector;
+    private GestureDetector mRightFrontGestureDetector;
+    private GestureDetector mLeftRearGestureDetector;
+    private GestureDetector mRightRearGestureDetector;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +51,6 @@ public class MyGestureActivity extends Activity{
         mRightFrontGestureDetector = new GestureDetector(this, new RightFrontOnGestureListener());
         mLeftRearGestureDetector = new GestureDetector(this, new LeftRearOnGestureListener());
         mRightRearGestureDetector = new GestureDetector(this, new RightRearOnGestureListener());
-
-//        leftfornt = (RelativeLayout)findViewById(R.id.front_left);
-//        tvLeftFrontOperation = (TextView) findViewById(R.id.tv_front_left_operation);
-//        rightfront = (RelativeLayout)findViewById(R.id.front_right);
-//        tvRightFrontOperation = (TextView) findViewById(R.id.tv_front_right_operation);
-//        leftrear = (RelativeLayout)findViewById(R.id.rear_left);
-//        tvLeftRearOperation = (TextView) findViewById(R.id.tv_rear_left_operation);
-//        rightrear = (RelativeLayout)findViewById(R.id.rear_right);
-//        tvRightRearOperation = (TextView) findViewById(R.id.tv_rear_right_operation);
         
         ivCar.setOnClickListener(new OnClickListener() {
             
@@ -83,104 +60,98 @@ public class MyGestureActivity extends Activity{
             }
         });
         
-        layoutFourTires.post(new Runnable() {
-            
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                mScreenWidth = layoutFourTires.getWidth();
-                mScreenHeight = layoutFourTires.getHeight();
-                
-                leftfront = new TireLayout(MyGestureActivity.this);
-                leftfront.setBackgroundColor(Color.RED);
-                leftfront.setPosition("0左前胎");
-                rightfront = new TireLayout(MyGestureActivity.this);
-                rightfront.setBackgroundColor(Color.YELLOW);
-                rightfront.setPosition("1右前胎");
-                leftrear = new TireLayout(MyGestureActivity.this);
-                leftrear.setBackgroundColor(Color.BLUE);
-                leftrear.setPosition("2左后胎");
-                rightrear = new TireLayout(MyGestureActivity.this);
-                rightrear.setBackgroundColor(Color.GREEN);
-                rightrear.setPosition("3右后胎");
-                
-                layoutFourTires.addView(leftfront, 0, new ViewGroup.LayoutParams(mScreenWidth / 2, mScreenHeight / 2));  
-                layoutFourTires.addView(rightfront, 1, new ViewGroup.LayoutParams(mScreenWidth / 2, mScreenHeight / 2));
-                layoutFourTires.addView(leftrear, 2, new ViewGroup.LayoutParams(mScreenWidth / 2, mScreenHeight / 2));
-                layoutFourTires.addView(rightrear, 3, new ViewGroup.LayoutParams(mScreenWidth / 2, mScreenHeight / 2));
-                
-//                leftfront.layout(0, 0, mScreenWidth / 2, mScreenHeight / 2);
-//                rightfront.layout(mScreenWidth / 2, 0, mScreenWidth,  mScreenHeight / 2);
-//                leftrear.layout(0, mScreenHeight / 2, mScreenWidth / 2, mScreenHeight);
-//                rightrear.layout(mScreenHeight / 2, mScreenHeight / 2, mScreenWidth, mScreenHeight);
-                setLayout(leftfront, 0, 0);
-                setLayout(rightfront, mScreenWidth / 2, 0);
-                setLayout(leftrear, 0, mScreenHeight / 2);
-                setLayout(rightrear, mScreenWidth / 2, mScreenHeight / 2);
-                
-                leftfront.setOnTouchListener(new OnTouchListener() {
-                    
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        Log.d(getClass().getName(), "onTouch-----" + getActionName(event.getAction()));
-                        mLeftFrontGestureDetector.onTouchEvent(event);
-                        // 一定要返回true，不然获取不到完整的事件
-                        return true;
-                    }
-                });
-                
-                rightfront.setOnTouchListener(new OnTouchListener() {
-                    
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        Log.d(getClass().getName(), "onTouch-----" + getActionName(event.getAction()));
-                        mRightFrontGestureDetector.onTouchEvent(event);
-                        // 一定要返回true，不然获取不到完整的事件
-                        return true;
-                    }
-                });
-                
-                leftrear.setOnTouchListener(new OnTouchListener() {
-                    
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        Log.d(getClass().getName(), "onTouch-----" + getActionName(event.getAction()));
-                        mLeftRearGestureDetector.onTouchEvent(event);
-                        // 一定要返回true，不然获取不到完整的事件
-                        return true;
-                    }
-                });
-                
-                rightrear.setOnTouchListener(new OnTouchListener() {
-                    
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        Log.d(getClass().getName(), "onTouch-----" + getActionName(event.getAction()));
-                        mRightRearGestureDetector.onTouchEvent(event);
-                        // 一定要返回true，不然获取不到完整的事件
-                        return true;
-                    }
-                });
-            }
-        });
+        layoutFourTires.post(addTireLayout);
     }
 
+    /**
+     * 动态添加轮胎布局
+     */
+    private Runnable addTireLayout = new Runnable() {
+        
+        @Override
+        public void run() {
+            mScreenWidth = layoutFourTires.getWidth();
+            mScreenHeight = layoutFourTires.getHeight();
+            
+            leftfront = new TireLayout(MyGestureActivity.this);
+            leftfront.setBackgroundColor(Color.RED);
+            leftfront.setPosition("0左前胎");
+            leftfront.setOnTouchListener(new OnTouchListener() {
+                
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Log.d(TAG, "onTouch-----" + getActionName(event.getAction()));
+                    mLeftFrontGestureDetector.onTouchEvent(event);
+                    // 一定要返回true，不然获取不到完整的事件
+                    return true;
+                }
+            });
+            
+   
+            rightfront = new TireLayout(MyGestureActivity.this);
+            rightfront.setBackgroundColor(Color.YELLOW);
+            rightfront.setPosition("1右前胎");
+            rightfront.setOnTouchListener(new OnTouchListener() {
+                
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Log.d(TAG, "onTouch-----" + getActionName(event.getAction()));
+                    mRightFrontGestureDetector.onTouchEvent(event);
+                    // 一定要返回true，不然获取不到完整的事件
+                    return true;
+                }
+            });
+            
+            leftrear = new TireLayout(MyGestureActivity.this);
+            leftrear.setBackgroundColor(Color.BLUE);
+            leftrear.setPosition("2左后胎");
+            leftrear.setOnTouchListener(new OnTouchListener() {
+                
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Log.d(TAG, "onTouch-----" + getActionName(event.getAction()));
+                    mLeftRearGestureDetector.onTouchEvent(event);
+                    // 一定要返回true，不然获取不到完整的事件
+                    return true;
+                }
+            });
+            
+            rightrear = new TireLayout(MyGestureActivity.this);
+            rightrear.setBackgroundColor(Color.GREEN);
+            rightrear.setPosition("3右后胎");
+            rightrear.setOnTouchListener(new OnTouchListener() {
+                
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Log.d(TAG, "onTouch-----" + getActionName(event.getAction()));
+                    mRightRearGestureDetector.onTouchEvent(event);
+                    // 一定要返回true，不然获取不到完整的事件
+                    return true;
+                }
+            });
+            
+            layoutFourTires.addView(leftfront, 0, new ViewGroup.LayoutParams(mScreenWidth / 2, mScreenHeight / 2));
+            layoutFourTires.addView(rightfront, 1, new ViewGroup.LayoutParams(mScreenWidth / 2, mScreenHeight / 2));
+            layoutFourTires.addView(leftrear, 2, new ViewGroup.LayoutParams(mScreenWidth / 2, mScreenHeight / 2));
+            layoutFourTires.addView(rightrear, 3, new ViewGroup.LayoutParams(mScreenWidth / 2, mScreenHeight / 2));
+            
+            setLayout(leftfront, 0, 0);
+            setLayout(rightfront, mScreenWidth / 2, 0);
+            setLayout(leftrear, 0, mScreenHeight / 2);
+            setLayout(rightrear, mScreenWidth / 2, mScreenHeight / 2);
+        }
+    };
+    
     /* 
-    * 设置控件所在的位置YY，并且不改变宽高， 
-    * XY为绝对位置 
-    */ 
+     * 设置控件所在的位置YY，并且不改变宽高， 
+     * XY为绝对位置 
+     */ 
     private void setLayout(View view, int x,int y) { 
         MarginLayoutParams margin = new MarginLayoutParams(view.getLayoutParams()); 
         margin.setMargins(x, y, x + margin.width, y + margin.height); 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(margin); 
         view.setLayoutParams(layoutParams); 
     } 
-    
-    @Override
-    protected void onResume() {
-        // TODO Auto-generated method stub
-        super.onResume();
-    }
     
     private String getActionName(int action) {
         String name = "";
@@ -198,7 +169,7 @@ public class MyGestureActivity extends Activity{
                 break;
             }
             default:
-            break;
+                break;
         }
         return name;
     }
@@ -366,16 +337,6 @@ public class MyGestureActivity extends Activity{
         }
     };
 
-//    private Animation getOffsetMoveAnimation(float fromX, float fromY) {
-//        TranslateAnimation mTranslateAnimation = new TranslateAnimation(
-//                Animation.RELATIVE_TO_SELF, fromX,
-//                Animation.RELATIVE_TO_SELF, 0.0F,
-//                Animation.RELATIVE_TO_SELF, fromY,
-//                Animation.RELATIVE_TO_SELF, 0.0F);
-//        mTranslateAnimation.setDuration(300L);
-//        return mTranslateAnimation;
-//    }
-
     private synchronized void SwapTires(final RelativeLayout view1, final RelativeLayout view2) {
 
         final int left1 = view1.getLeft();
@@ -409,13 +370,8 @@ public class MyGestureActivity extends Activity{
             
             @Override
             public void onAnimationEnd(Animation animation) {
-                // TODO Auto-generated method stub
                 view1.clearAnimation();
                 setLayout(view1, left2, top2);
-//                Log.d(TAG, "swap : left1 = " + view1.getLeft() 
-//                                             + ", top1 = " + view1.getTop() 
-//                                             + ", right1 = " + view1.getRight() 
-//                                             + ", bottom1 = " + view1.getBottom());
             }
         });
         
@@ -438,49 +394,13 @@ public class MyGestureActivity extends Activity{
             
             @Override
             public void onAnimationEnd(Animation animation) {
-                // TODO Auto-generated method stub
                 view2.clearAnimation();
                 setLayout(view2, left1, top1);
-//                Log.d(TAG, "swap : left2 = " + view2.getLeft() 
-//                                             + ", top2 = " + view2.getTop()
-//                                             + ", right2 = " + view2.getRight() 
-//                                             + ", bottom2 = " + view2.getBottom());
             }
         });
         
         view1.startAnimation(taView1);
         view2.startAnimation(taView2);
         
-//        ObjectAnimator oa1= ObjectAnimator.ofFloat(view1, "X", left1, left2);
-//        ObjectAnimator oa2= ObjectAnimator.ofFloat(view1, "Y", top1, top2);
-//        ObjectAnimator oa3= ObjectAnimator.ofFloat(view2, "X", left2, left1);
-//        ObjectAnimator oa4= ObjectAnimator.ofFloat(view2, "Y", top2, top1);
-//        AnimatorSet animatorSet = new AnimatorSet();
-//        animatorSet.play(oa1).with(oa2).with(oa3).with(oa4);
-//        animatorSet.setDuration(500);
-//        animatorSet.setInterpolator(new LinearInterpolator());
-//        animatorSet.start();
-//        animatorSet.addListener(new AnimatorListenerAdapter() {
-//            @Override
-//            public void onAnimationStart(Animator animation) {
-//
-//                super.onAnimationStart(animation);
-//            }
-//            
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-////                setLayout(view1, left2, top2);
-////                setLayout(view2, left1, top1);
-//                Log.d(TAG, "swap : left1 = " + view1.getLeft() 
-//                                      + ", top1 = " + view1.getTop() 
-//                                      + ", right1 = " + view1.getRight() 
-//                                      + ", bottom1 = " + view1.getBottom());
-//                Log.d(TAG, "swap : left2 = " + view2.getLeft() 
-//                                      + ", top2 = " + view2.getTop()
-//                                      + ", right2 = " + view2.getRight() 
-//                                      + ", bottom2 = " + view2.getBottom());
-//                super.onAnimationEnd(animation);
-//            }
-//        });
     }
 }

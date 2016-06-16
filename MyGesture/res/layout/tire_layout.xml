@@ -8,13 +8,14 @@
        android:layout_width= "100dp"
        android:layout_height= "50dp"
        android:layout_alignParentTop="true"
-       android:layout_centerHorizontal="true"/>
+       android:layout_centerHorizontal="true"
+       android:gravity="center"/>
     <TextView
        android:id= "@+id/tv_position"
        android:layout_width= "100dp"
        android:layout_height= "50dp"
        android:layout_centerInParent="true"
-       android:gravity= "center"
+       android:gravity="center"
        android:clickable= "false"/>
     
 </RelativeLayout>
