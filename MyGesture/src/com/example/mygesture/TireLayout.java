@@ -1,7 +1,5 @@
 package com.example.mygesture;
 
-import org.w3c.dom.Text;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;

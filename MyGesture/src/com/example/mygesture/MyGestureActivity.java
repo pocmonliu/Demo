@@ -56,7 +56,7 @@ public class MyGestureActivity extends Activity{
             
             @Override
             public void onClick(View v) {
-                SwapTires(leftrear, rightfront);
+                SwapTires("tireLeftRear", "tireRightFront");
             }
         });
         
@@ -337,8 +337,37 @@ public class MyGestureActivity extends Activity{
         }
     };
 
-    private synchronized void SwapTires(final RelativeLayout view1, final RelativeLayout view2) {
+    private TireLayout getLayoutFromPos(String position) {
+        if(position.equals("tireLeftFront")){
+            return leftfront;
+        }else if(position.equals("tireRightFront")){
+            return rightfront;
+        } else if(position.equals("tireLeftRear")){
+            return leftrear;
+        } else if(position.equals("tireRightRear")){
+            return rightrear;
+        } else {
+            return null;
+        }
+    }
+    
+    private void ReassociationLayout(String position, TireLayout layout){
+        if(position.equals("tireLeftFront")){
+            leftfront = layout;
+        }else if(position.equals("tireRightFront")){
+            rightfront = layout;
+        } else if(position.equals("tireLeftRear")){
+            leftrear = layout;
+        } else if(position.equals("tireRightRear")){
+            rightrear = layout;
+        }
+    }
+    
+    private synchronized void SwapTires(final String pos1, final String pos2) {
 
+        final TireLayout view1 = getLayoutFromPos(pos1);
+        final TireLayout view2 = getLayoutFromPos(pos2);
+        
         final int left1 = view1.getLeft();
         final int top1 = view1.getTop();
         final int right1 = view1.getRight();
@@ -396,11 +425,16 @@ public class MyGestureActivity extends Activity{
             public void onAnimationEnd(Animation animation) {
                 view2.clearAnimation();
                 setLayout(view2, left1, top1);
+                
+                ReassociationLayout(pos1, view2);
+                ReassociationLayout(pos2, view1);
+                
+                rightfront.setOperation("右前");
             }
         });
         
         view1.startAnimation(taView1);
         view2.startAnimation(taView2);
-        
     }
+    
 }
