@@ -6,8 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 
-//int atoi (char s[])
-//{
+//int atoi (char s[]) {
 //    int i,n,sign;
 //    for(i=0;isspace(s[i]);i++)//跳过空白符;
 //    sign=(s[i]=='-')?-1:1;
@@ -18,8 +17,7 @@
 //    return sign *n;
 //}
 
-int get7zaProgress(char s[])
-{
+int get7zaProgress(char s[]) {
     if(strstr(s, "%") == NULL){
         return -1;
     }
@@ -41,41 +39,32 @@ int get7zaProgress(char s[])
     return n;
 }
 
-int And7zDecompression(){
-    fprintf(stdout, "And7zDecompression() start.\n");
-
+int C7z(char * const cmd[]){
+    fprintf(stdout, "++++++cmd=%s, %s, %s, %s, %s, %s, %s, %s.\n", cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5], cmd[6], cmd[7]);
     int progress = 0;
 
     int pipefd[2];
     if(pipe(pipefd) < 0){
-        fprintf(stderr, "pipe failed. %s\n", strerror(errno));
+        fprintf(stderr, "pipe failed. (%s)\n", strerror(errno));
         return -1;
     }
-
-    fprintf(stdout, "pipe succeed...\n");
 
     pid_t pid = fork();
     if (pid == 0) {
         //child
-        fprintf(stdout, "this is child pid.\n");
-
         close(pipefd[0]);
-        if (pipefd[1] != STDERR_FILENO)
-        {
+        if (pipefd[1] != STDERR_FILENO) {
             dup2(pipefd[1], STDERR_FILENO);
             close(pipefd[1]);
         }
 
-        char *argv[] = {"7za", "x", "/sdcard/update_pwd.zip", "-o/sdcard/", "-p123456", "-aoa", "-bsp2", "-bse1", (char *)0};
-        execv("/data/user/7za", argv);
+        execv(cmd[0], cmd);
 
         _exit(-1);
     }
 
     //parent
-    fprintf(stdout, "this is parent pid.\n");
     close(pipefd[1]);
-
     char buffer[20];
     FILE* from_child = fdopen(pipefd[0], "r");
     while (fgets(buffer, sizeof(buffer), from_child) != NULL) {
@@ -84,7 +73,7 @@ int And7zDecompression(){
         int p = get7zaProgress(buffer);
         if(p > progress){
             progress = p;
-            fprintf(stdout, "===%d\n", progress);
+            fprintf(stdout, "***%d\n", progress);
         }
     }
 
@@ -92,15 +81,87 @@ int And7zDecompression(){
     close(pipefd[0]);
     waitpid(pid, NULL, 0);
 
-    fprintf(stdout, "And7zDecompression() end.\n");
-
     return 0;
 }
 
-int main(int argc, char** argv) {
-    fprintf(stdout, "Execute And7zDecompression().\n");
+int C7zCompression(char* src, char* dst){
+    char * const cmd[] = {"/data/user/7za"
+            , "a"
+            , dst
+            , src
+            , "-bsp2"
+            , "-bse1"
+            , (char*)0};
 
-    And7zDecompression();
+    return C7z(cmd);
+}
+
+int C7zCompression(char* src, char* dst, char* pwd){
+    char ppwd[128] = "-p";
+    strcat(ppwd, pwd);
+//    fprintf(stdout, "+++ pwd = %s, ppwd = %s, len = %d\n", pwd, ppwd, strlen(pwd));
+
+    char * const cmd[] = {"/data/user/7za"
+            , "a"
+            , dst
+            , src
+            , ppwd
+            , "-bsp2"
+            , "-bse1"
+            , (char*)0};
+
+    return C7z(cmd);
+}
+
+int C7zDecompression(char* src, char* dst){
+   char odst[128] = "-o";
+
+   strcat(odst, dst);
+//   fprintf(stdout, "+++ dst = %s, odst = %s, len = %d\n", dst, odst, strlen(dst));
+
+   char * const cmd[] = {"/data/user/7za"
+           , "x"
+           , src
+           , odst
+           , "-aoa"
+           , "-bsp2"
+           , "-bse1"
+           , (char*)0};
+
+   return C7z(cmd);
+}
+
+int C7zDecompression(char* src, char* dst, char* pwd){
+    char odst[128] = "-o";
+    char ppwd[128] = "-p";
+
+    strcat(odst, dst);
+//    fprintf(stdout, "+++ dst = %s, odst = %s, len = %d\n", dst, odst, strlen(dst));
+
+    strcat(ppwd, pwd);
+//    fprintf(stdout, "+++ pwd = %s, ppwd = %s, len = %d\n", pwd, ppwd, strlen(pwd));
+
+    char * const cmd[] = {"/data/user/7za"
+            , "x"
+            , src
+            , odst
+            , ppwd
+            , "-aoa"
+            , "-bsp2"
+            , "-bse1"
+            , (char*)0};
+
+    return C7z(cmd);
+}
+
+int main(int argc, char** argv) {
+    int rtn = C7zCompression("/sdcard/recovery.zip", "/sdcard/recovery_no_pwd.zip");
+//    int rtn = C7zCompression("/sdcard/recovery.zip", "/sdcard/recovery_pwd.zip", "123456");
+    fprintf(stdout, "Execute C7zCompression, Rtn = %d.\n", rtn);
+
+//    int rtn = C7zDecompression("/sdcard/recovery.zip", "/sdcard/");
+//    int rtn = C7zDecompression("/sdcard/update_pwd.zip", "/sdcard/", "123456");
+//    fprintf(stdout, "Execute C7zDecompression, Rtn = %d.\n", rtn);
 
     return 0;
 }
