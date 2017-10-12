@@ -63,9 +63,16 @@ public class MainActivity extends Activity {
             public void run() {
                 String pwd = "123456";
                 
-                String srcPath1 = "/sdcard/update_pwd.zip";
-                String dstPath1 = "/sdcard/";
-                mAnd7z.And7zDecompression(srcPath1, dstPath1, pwd, mAnd7zCallback);
+//                String srcPath1 = "/sdcard/update_pwd.zip";
+//                String dstPath1 = "/sdcard/";
+//                mAnd7z.And7zDecompression(srcPath1, dstPath1, pwd, mAnd7zCallback);
+                
+                String srcPath = "/sdcard/recovery.zip";
+                if(mAnd7z.isEncryptedZip(srcPath)){
+                    Log.d(TAG, "加密zip包");
+                }else{
+                    Log.d(TAG, "非加密zip包");
+                }
                 
 //                String srcPath2 = "/sdcard/update.zip";
 //                String dstPath2 = "/sdcard/update_pwd.zip";

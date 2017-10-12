@@ -1,6 +1,8 @@
 package com.example.za;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +30,60 @@ public class And7z {
     private static final int WHAT_7Z_PROGRESS = 2;
     
     private And7zCallback mAnd7zCallback = null;
+    
+    /**
+     * @param path
+     * 
+     *   Signature   The signature of the local file header. This is always '\x50\x4b\x03\x04'.
+     *   Version PKZip version needed to extract
+     *   Flags   General purpose bit flag:
+     *   Bit 00: encrypted file
+     *   Bit 01: compression option 
+     *   Bit 02: compression option 
+     *   Bit 03: data descriptor
+     *   Bit 04: enhanced deflation
+     *   Bit 05: compressed patched data
+     *   Bit 06: strong encryption
+     *   Bit 07-10: unused
+     *   Bit 11: language encoding
+     *   Bit 12: reserved
+     *   Bit 13: mask header values
+     *   Bit 14-15: reserved
+     */
+    public boolean isEncryptedZip(String path){
+        if(!new File(path).exists()){
+            Log.d(TAG, path + "is not exist.");
+            return false;
+        }
+        
+        if(!path.endsWith(".zip")){
+            Log.d(TAG, path + "is not zip file.");
+            return false;
+        }
+        
+        InputStream in = null;
+        try {
+            byte[] tempbytes = new byte[8];
+            in = new FileInputStream(path);
+            in.read(tempbytes);
+                
+            if((tempbytes[6] & 1) == 0x1){
+                return true;
+            }
+        } catch (Exception e) {
+            Log.d(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e1) {
+                    Log.d(TAG, Log.getStackTraceString(e1));
+                }
+            }
+        }
+        
+        return false;
+    }
     
     /**
      * ./7za a /sdcard/log.zip /sdcard/log.txt -bsp2
