@@ -99,7 +99,17 @@ public class MainActivity extends Activity/* extends AppCompatActivity */{
 //               mSurfaceView.setLayoutParams(new RelativeLayout.LayoutParams( 720, 480));
                Log.d(TAG, "surfaceview_width=" + mSurfaceView.getWidth() + ", surfaceview_height=" + mSurfaceView.getHeight());
                
-               parameters.setPreviewSize(720, 240);
+               //自动递归选择最优摄像头支持分辨率
+               int width = -1;
+               int height = -1;
+               for(Size size : previewSizes){
+                   if(size.width > width){
+                       width = size.width;
+                       height = size.height;
+                   }
+               }
+               
+                 parameters.setPreviewSize(width, height);
                  
                  camera.setParameters(parameters);
 
