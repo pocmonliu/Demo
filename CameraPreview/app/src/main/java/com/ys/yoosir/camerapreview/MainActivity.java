@@ -9,7 +9,6 @@ import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
-//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -21,7 +20,7 @@ import android.widget.RelativeLayout;
 
 public class MainActivity extends Activity/* extends AppCompatActivity */{
 
-    private final String TAG = MainActivity.this.getClass().getSimpleName();
+    private static final String TAG = "MyCameraPreView";
 
     private Camera camera;
     private boolean isPreview = false;
@@ -109,12 +108,14 @@ public class MainActivity extends Activity/* extends AppCompatActivity */{
                    }
                }
                
+               Log.d(TAG, "width=" + width + ", height=" + height);
+               
                  parameters.setPreviewSize(width, height);
                  
                  camera.setParameters(parameters);
 
                 //设置角度，此处 CameraId 我默认 为 0 （后置）
-                // CameraId 也可以 通过 参考 Camera.open() 源码 方法获取
+                //CameraId 也可以 通过 参考 Camera.open() 源码 方法获取
                 //setCameraDisplayOrientation(MainActivity.this,0,camera);
                 
                 camera.setPreviewDisplay(surfaceHolder);//通过SurfaceView显示取景画面
@@ -184,6 +185,7 @@ public class MainActivity extends Activity/* extends AppCompatActivity */{
         }
 
         int result;
+        Log.d(TAG, "info.facing =   " + info.facing + ", cameraCount = " + Camera.getNumberOfCameras());
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             //前置摄像头
             result = (info.orientation + degrees) % 360;
